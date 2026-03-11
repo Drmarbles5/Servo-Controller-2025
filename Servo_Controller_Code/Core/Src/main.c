@@ -369,7 +369,25 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void CHANGE_PWM_DUTY_CYCLE(uint8_t servo, uint16_t pulse_width) {
+  uint32_t channel;
+  const uint32_t CHANNELS[4] = {TIM_CHANNEL_1, TIM_CHANNEL_2, TIM_CHANNEL_3, TIM_CHANNEL_4};
+  if (servo > 7){ /*invalid servo number*/
+    return;
+  }
+  else if (pulse_width > 19999){ /*Invalid pulse width | possibly change to 2000 depending on servo planned to use*/
+    return;
+  }
+  else if (servo <=3){
+    channel = CHANNELS[servo];
+    __HAL_TIM_SET_COMPARE(&htim2, channel, pulse_width);
+  }
+  else if (servo <=7){
+    channel = CHANNELS[servo-4];
+    __HAL_TIM_SET_COMPARE(&htim3, channel, pulse_width);
+  }
+  
+}
 /* USER CODE END 4 */
 
 /**
